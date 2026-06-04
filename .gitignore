@@ -1,0 +1,16 @@
+# Frontend dependencies
+node_modules/
+dist/
+.env
+
+# Python dependencies
+__pycache__/
+*.pyc
+.venv/
+env/
+venv/
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
