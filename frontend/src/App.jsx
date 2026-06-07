@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FlaskConical } from 'lucide-react';
 
-// Import our new modular components
+// Import our new modular components (Capitalized to match your folders for Vercel!)
 import UploadCard from './Components/UploadCard';
 import ModificationsCard from './Components/ModificationsCard';
 import ActionSidebar from './Components/ActionSidebar';
@@ -53,17 +53,12 @@ function App() {
       
       const data = await response.json();
       
-      // Update states with the processed results from FastAPI
+      // Update states with the exact keys returned from FastAPI
       if (data.restored_image) {
         setRestoredImage(data.restored_image);
-      } else if (data.image) {
-        setRestoredImage(data.image);
       }
-
       if (data.analysis_report) {
         setAnalysisReport(data.analysis_report);
-      } else if (data.report) {
-        setAnalysisReport(data.report);
       }
       
     } catch (error) {
