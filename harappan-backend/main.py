@@ -12,6 +12,7 @@ load_dotenv()
 
 app = FastAPI(title="Harappan Artifact AI Restoration API")
 
+# Allow your Vercel frontend to talk to this backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  
@@ -23,6 +24,7 @@ app.add_middleware(
 print("Loading background removal AI...")
 session = new_session("u2net")
 
+# Initialize OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY")) 
 
 MATERIAL_REPORTS = {
@@ -50,17 +52,13 @@ async def restore_pigment(
         original = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
         
         # OpenAI DALL-E 2 Edit requires strictly square PNG images.
-        # We resize the images to 1024x1024 to satisfy the API requirements.
         original_square = original.resize((1024, 1024))
         mask_square = mask_image.resize((1024, 1024))
 
-        # 2. Prepare the Mask for OpenAI
-        # DALL-E requires the area you want to change to be completely transparent (Alpha 0).
-        # rembg gives us the object as opaque. So we MUST invert the alpha channel here.
+        # 2. Prepare the Mask for OpenAI (Invert Alpha)
         alpha_channel = mask_square.split()[3]
         inverted_alpha = ImageOps.invert(alpha_channel)
         
-        # Create a blank mask and apply the inverted alpha
         dalle_mask = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
         dalle_mask.putalpha(inverted_alpha)
 
@@ -74,19 +72,19 @@ async def restore_pigment(
         mask_byte_arr = mask_byte_arr.getvalue()
 
         # 4. Prompt Engineering for Restoration
-        # We specifically tell GPT to fill cracks and guess the original color based on the material
         prompt = f"A museum-quality macro photograph of a flawlessly restored ancient Indus Valley artifact. It is made of {target_material}. The object is in pristine, freshly-crafted condition. All cracks, chips, and damage have been completely repaired and smoothed out. The original vivid colors and structural integrity are fully restored. Maintain the exact lighting and background of the original image."
 
         print(f"Sending to OpenAI: {prompt}")
 
-
+        # 5. Call OpenAI DALL-E 2
         response = client.images.edit(
-            model="gpt-image-2",
-            image=("original.png", orig_byte_arr, "image/png"),
-            mask=("mask.png", mask_byte_arr, "image/png"),
+            model="dall-e-2",
+            image=orig_byte_arr,
+            mask=mask_byte_arr,
             prompt=prompt,
             n=1,
-            size="1024x1024"
+            size="1024x1024",
+            response_format="b64_json"  # Forces raw image data return
         )
 
         b64_data = response.data[0].b64_json
@@ -98,9 +96,10 @@ async def restore_pigment(
             "No specific historical data available for this material configuration."
         )
 
+        # 7. Return exact keys expected by the frontend
         return {
             "status": "success",
-            "restored_image_url": restored_image_url,
+            "restored_image": restored_image_url, 
             "analysis_report": report_text
         }
 
