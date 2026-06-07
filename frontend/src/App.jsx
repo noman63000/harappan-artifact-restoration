@@ -53,14 +53,10 @@ function App() {
       
       const data = await response.json();
       
-      if (data.restored_image_url) {
-        setRestoredImage(data.restored_image_url);
-        setAnalysisReport(data.analysis_report);
-      }
-
+      // (Any code you had here to handle the 'data', like setting the image state)
+      
     } catch (error) {
-      console.error("API Error:", error);
-      alert("Failed to connect to the backend server. Is Uvicorn running?");
+      console.error("Error connecting to backend:", error);
     } finally {
       setIsProcessing(false);
     }
