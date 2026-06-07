@@ -45,7 +45,7 @@ function App() {
     formData.append("file", image);
     formData.append("target_material", targetMaterial); 
 
-   try {
+    try {
       const response = await fetch('https://mohsan-raza-harappan-backend.hf.space/api/restore-pigment', {
         method: 'POST',
         body: formData,
@@ -53,7 +53,18 @@ function App() {
       
       const data = await response.json();
       
-      // (Any code you had here to handle the 'data', like setting the image state)
+      // Update states with the processed results from FastAPI
+      if (data.restored_image) {
+        setRestoredImage(data.restored_image);
+      } else if (data.image) {
+        setRestoredImage(data.image);
+      }
+
+      if (data.analysis_report) {
+        setAnalysisReport(data.analysis_report);
+      } else if (data.report) {
+        setAnalysisReport(data.report);
+      }
       
     } catch (error) {
       console.error("Error connecting to backend:", error);
