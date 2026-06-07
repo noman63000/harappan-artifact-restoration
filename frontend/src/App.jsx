@@ -45,12 +45,9 @@ function App() {
     formData.append("file", image);
     formData.append("target_material", targetMaterial); 
 
-    try {
-      const response = await fetch('https://afterlife-eccentric-hexagon.ngrok-free.dev/api/restore-pigment', {
+   try {
+      const response = await fetch('https://mohsan-raza-harappan-backend.hf.space/api/restore-pigment', {
         method: 'POST',
-        headers: {
-          'ngrok-skip-browser-warning': 'true'
-        },
         body: formData,
       });
       
