@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { FlaskConical } from 'lucide-react';
 
 // Import our new modular components
-import UploadCard from './components/UploadCard';
-import ModificationsCard from './components/ModificationsCard';
-import ActionSidebar from './components/ActionSidebar';
-import ResultDisplay from './components/ResultDisplay';
+import UploadCard from './Components/UploadCard';
+import ModificationsCard from './Components/ModificationsCard';
+import ActionSidebar from './Components/ActionSidebar';
+import ResultDisplay from './Components/ResultDisplay';
 
 function App() {
   // State Management
