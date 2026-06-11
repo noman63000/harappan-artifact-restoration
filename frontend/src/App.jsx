@@ -12,6 +12,7 @@ function App() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [targetMaterial, setTargetMaterial] = useState('Terracotta Red');
+  const [customPrompt, setCustomPrompt] = useState(''); // <-- NEW: State for custom user text
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [restoredImage, setRestoredImage] = useState(null);
@@ -33,6 +34,7 @@ function App() {
     setPreview(null);
     setRestoredImage(null);
     setAnalysisReport('');
+    setCustomPrompt(''); // <-- NEW: Clears text box on reset
   };
 
   const handleSubmit = async (e) => {
@@ -44,6 +46,7 @@ function App() {
     const formData = new FormData();
     formData.append("file", image);
     formData.append("target_material", targetMaterial); 
+    formData.append("custom_prompt", customPrompt); // <-- NEW: Sends text to FastAPI
 
     try {
       const response = await fetch('https://mohsan-raza-harappan-backend.hf.space/api/restore-pigment', {
@@ -113,9 +116,12 @@ function App() {
               resetImage={resetImage} 
             />
             
+            {/* NEW: Passing custom prompt props to the card */}
             <ModificationsCard 
               targetMaterial={targetMaterial} 
               setTargetMaterial={setTargetMaterial} 
+              customPrompt={customPrompt}           
+              setCustomPrompt={setCustomPrompt}     
             />
           </div>
 
