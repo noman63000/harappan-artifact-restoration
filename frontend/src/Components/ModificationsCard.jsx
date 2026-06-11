@@ -9,7 +9,8 @@ const MATERIALS = [
   { id: 'Lapis Lazuli', label: 'Lapis Lazuli', desc: 'Luxury ultramarine' }
 ];
 
-const ModificationsCard = ({ targetMaterial, setTargetMaterial }) => {
+// Updated to receive customPrompt and setCustomPrompt from App.jsx
+const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, setCustomPrompt }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6">
       <h2 className="text-lg font-bold flex items-center gap-3 mb-6 text-slate-800">
@@ -17,7 +18,8 @@ const ModificationsCard = ({ targetMaterial, setTargetMaterial }) => {
         Select Modifications
       </h2>
 
-      <div className="mb-8">
+      {/* Section A: Material Selector Grid */}
+      <div className="mb-6">
         <h3 className="text-sm font-semibold text-slate-700 mb-3">Target Material & Pigment</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {MATERIALS.map((mat) => (
@@ -39,6 +41,24 @@ const ModificationsCard = ({ targetMaterial, setTargetMaterial }) => {
         </div>
       </div>
 
+      {/* NEW Section B: Custom AI Text Prompt Input */}
+      <div className="mb-8">
+        <label className="block text-sm font-semibold text-slate-700 mb-2">
+          Custom Restoration Prompt (Optional)
+        </label>
+        <textarea
+          className="w-full border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none shadow-inner bg-slate-50 text-slate-800"
+          rows="3"
+          placeholder="e.g., Add gold gold leaf filigree patterns or clear visible Harappan script details along the surface..."
+          value={customPrompt}
+          onChange={(e) => setCustomPrompt(e.target.value)}
+        />
+        <p className="text-xs text-slate-500 mt-1">
+          If provided, this prompt will override the standard material template and direct the AI pipeline directly.
+        </p>
+      </div>
+
+      {/* Section C: Safety & Guardrails Info Box */}
       <div className="bg-green-50 border border-green-200 rounded-xl p-4">
         <h3 className="text-sm font-semibold text-green-800 flex items-center gap-2 mb-2">
           <ShieldCheck className="w-4 h-4" /> Structural Preservation
