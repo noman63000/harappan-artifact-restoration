@@ -12,7 +12,8 @@ function App() {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [targetMaterial, setTargetMaterial] = useState('Auto');
-  const [customPrompt, setCustomPrompt] = useState(''); // <-- NEW: State for custom user text
+  const [customPrompt, setCustomPrompt] = useState('');
+  const [preserveStructure, setPreserveStructure] = useState(true);
   
   const [isProcessing, setIsProcessing] = useState(false);
   const [restoredImage, setRestoredImage] = useState(null);
