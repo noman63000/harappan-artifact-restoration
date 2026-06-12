@@ -1,7 +1,6 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
-// NEW: Added the 'Auto' option at the very beginning of the array
 const MATERIALS = [
   { id: 'Auto', label: '✨ Auto AI Detect', desc: 'Let AI choose the best material' },
   { id: 'Terracotta Red', label: 'Terracotta Red', desc: 'Iron-rich alluvial clay' },
@@ -11,7 +10,11 @@ const MATERIALS = [
   { id: 'Lapis Lazuli', label: 'Lapis Lazuli', desc: 'Luxury ultramarine' }
 ];
 
-const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, setCustomPrompt,preserveStructure, setPreserveStructure }) => {
+const ModificationsCard = ({ 
+  targetMaterial, setTargetMaterial, 
+  customPrompt, setCustomPrompt, 
+  preserveStructure, setPreserveStructure 
+}) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6">
       <h2 className="text-lg font-bold flex items-center gap-3 mb-6 text-slate-800">
@@ -84,7 +87,9 @@ const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, se
           </div>
         </div>
       </div>
-    );
+
+    </div>
+  );
 };
 
 export default ModificationsCard;
