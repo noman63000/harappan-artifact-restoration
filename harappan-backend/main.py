@@ -1,5 +1,9 @@
 import io
 import os
+
+# Tell rembg to look for the AI model in the current folder to avoid timeout errors
+os.environ["U2NET_HOME"] = os.getcwd()
+
 import base64
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,7 +42,9 @@ MATERIAL_REPORTS = {
 @app.post("/api/restore-pigment")
 async def restore_pigment(
     file: UploadFile = File(...),
-    target_material: str = Form("Terracotta Red") 
+    target_material: str = Form("Auto"), 
+    custom_prompt: str = Form(""),
+    preserve_structure: str = Form("true") # Catches the checkbox state from React
 ):
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Uploaded file must be an image.")
@@ -51,7 +57,7 @@ async def restore_pigment(
         mask_image = Image.open(io.BytesIO(mask_bytes)).convert("RGBA")
         original = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
         
-        # OpenAI DALL-E 2 Edit requires strictly square PNG images.
+        # OpenAI Image Edit requires strictly square PNG images.
         original_square = original.resize((1024, 1024))
         mask_square = mask_image.resize((1024, 1024))
 
@@ -72,30 +78,45 @@ async def restore_pigment(
         mask_byte_arr = mask_byte_arr.getvalue()
 
         # 4. Prompt Engineering for Restoration
-        prompt = f"A museum-quality macro photograph of a flawlessly restored ancient Indus Valley artifact. It is made of {target_material}. The object is in pristine, freshly-crafted condition. All cracks, chips, and damage have been completely repaired and smoothed out. The original vivid colors and structural integrity are fully restored. Maintain the exact lighting and background of the original image."
+        
+        # A. Determine structure instructions based on the user's checkbox
+        if preserve_structure.lower() == "true":
+            structure_instruction = "Strictly preserve all existing cracks, chips, missing pieces, and the exact original geometry. DO NOT repair damage, only apply the material pigment."
+        else:
+            structure_instruction = "The object is in pristine, freshly-crafted condition. All cracks, chips, and damage have been completely repaired, filled in, and smoothed out."
+
+        # B. Apply the instructions to our final prompts
+        if custom_prompt.strip():
+            prompt = f"A museum-quality macro photograph of a restored ancient artifact. {custom_prompt.strip()}. {structure_instruction} Maintain the exact lighting and background of the original image."
+            report_text = f"Custom Restoration applied based on user specifications: '{custom_prompt.strip()}'."
+            
+        elif target_material == "Auto":
+            prompt = f"A museum-quality macro photograph of an ancient Indus Valley artifact. Analyze the visual texture of the original object and restore its surface using the most historically probable original material and pigment (e.g., terracotta, steatite, or lapis). {structure_instruction} Maintain the exact lighting and background of the original image."
+            report_text = "Automatic AI Detection applied. The model analyzed the structural composition of the uploaded artifact and automatically selected the most historically probable original Harappan material for the restoration."
+            
+        else:
+            prompt = f"A museum-quality macro photograph of an ancient Indus Valley artifact. It is made of {target_material}. {structure_instruction} The original vivid colors are fully restored. Maintain the exact lighting and background of the original image."
+            report_text = MATERIAL_REPORTS.get(
+                target_material, 
+                "No specific historical data available for this material configuration."
+            )
 
         print(f"Sending to OpenAI: {prompt}")
 
-        # 5. Call OpenAI DALL-E 2
+        # 5. Call OpenAI Image API 
         response = client.images.edit(
-            model="dall-e-2",
-            image=orig_byte_arr,
-            mask=mask_byte_arr,
+            model="gpt-image-2",
+            image=("input.png", orig_byte_arr, "image/png"),  
+            mask=("mask.png", mask_byte_arr, "image/png"),   
             prompt=prompt,
             n=1,
-            size="1024x1024",
-            response_format="b64_json"  # Forces raw image data return
+            size="1024x1024"
         )
 
+        # 6. Extract base64 and format for frontend
         b64_data = response.data[0].b64_json
         restored_image_url = f"data:image/png;base64,{b64_data}"
         
-        # 6. Fetch the corresponding historical report
-        report_text = MATERIAL_REPORTS.get(
-            target_material, 
-            "No specific historical data available for this material configuration."
-        )
-
         # 7. Return exact keys expected by the frontend
         return {
             "status": "success",
