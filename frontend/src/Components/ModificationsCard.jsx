@@ -1,7 +1,9 @@
 import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
+// NEW: Added the 'Auto' option at the very beginning of the array
 const MATERIALS = [
+  { id: 'Auto', label: '✨ Auto AI Detect', desc: 'Let AI choose the best material' },
   { id: 'Terracotta Red', label: 'Terracotta Red', desc: 'Iron-rich alluvial clay' },
   { id: 'Iron Oxide Dark', label: 'Iron Oxide Dark', desc: 'Hematite-based slip' },
   { id: 'Indigo Blue', label: 'Indigo Blue', desc: 'Indigofera tinctoria dye' },
@@ -9,7 +11,6 @@ const MATERIALS = [
   { id: 'Lapis Lazuli', label: 'Lapis Lazuli', desc: 'Luxury ultramarine' }
 ];
 
-// Updated to receive customPrompt and setCustomPrompt from App.jsx
 const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, setCustomPrompt }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6">
@@ -41,7 +42,7 @@ const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, se
         </div>
       </div>
 
-      {/* NEW Section B: Custom AI Text Prompt Input */}
+      {/* Section B: Custom AI Text Prompt Input */}
       <div className="mb-8">
         <label className="block text-sm font-semibold text-slate-700 mb-2">
           Custom Restoration Prompt (Optional)
@@ -49,7 +50,7 @@ const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, se
         <textarea
           className="w-full border border-slate-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none shadow-inner bg-slate-50 text-slate-800"
           rows="3"
-          placeholder="e.g., Add gold gold leaf filigree patterns or clear visible Harappan script details along the surface..."
+          placeholder="e.g., Add gold leaf filigree patterns or clear visible Harappan script details along the surface..."
           value={customPrompt}
           onChange={(e) => setCustomPrompt(e.target.value)}
         />
