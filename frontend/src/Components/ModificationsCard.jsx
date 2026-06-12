@@ -11,7 +11,7 @@ const MATERIALS = [
   { id: 'Lapis Lazuli', label: 'Lapis Lazuli', desc: 'Luxury ultramarine' }
 ];
 
-const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, setCustomPrompt }) => {
+const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, setCustomPrompt,preserveStructure, setPreserveStructure }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6">
       <h2 className="text-lg font-bold flex items-center gap-3 mb-6 text-slate-800">
