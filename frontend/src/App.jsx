@@ -35,7 +35,8 @@ function App() {
     setPreview(null);
     setRestoredImage(null);
     setAnalysisReport('');
-    setCustomPrompt(''); // <-- NEW: Clears text box on reset
+    setCustomPrompt(''); 
+    setPreserveStructure(true);
   };
 
   const handleSubmit = async (e) => {
