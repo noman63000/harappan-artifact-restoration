@@ -60,20 +60,31 @@ const ModificationsCard = ({ targetMaterial, setTargetMaterial, customPrompt, se
       </div>
 
       {/* Section C: Safety & Guardrails Info Box */}
-      <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-        <h3 className="text-sm font-semibold text-green-800 flex items-center gap-2 mb-2">
+      <div className={`border rounded-xl p-4 transition-all ${preserveStructure ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'}`}>
+        <h3 className={`text-sm font-semibold flex items-center gap-2 mb-2 ${preserveStructure ? 'text-green-800' : 'text-slate-700'}`}>
           <ShieldCheck className="w-4 h-4" /> Structural Preservation
         </h3>
-        <div className="flex items-start gap-3 mt-3 p-3 bg-white border border-green-100 rounded-lg">
-          <input type="radio" readOnly checked className="mt-1 w-4 h-4 text-green-600 focus:ring-green-500" />
-          <div>
+        <div className="flex items-start gap-3 mt-3 p-3 bg-white border border-slate-100 rounded-lg shadow-sm">
+          <input 
+            type="checkbox" 
+            checked={preserveStructure}
+            onChange={(e) => setPreserveStructure(e.target.checked)}
+            className="mt-1 w-4 h-4 text-green-600 focus:ring-green-500 rounded cursor-pointer transition-colors" 
+          />
+          <div 
+            className="cursor-pointer" 
+            onClick={() => setPreserveStructure(!preserveStructure)}
+          >
             <p className="text-sm font-medium text-slate-800">Complete Mathematical Preservation</p>
-            <p className="text-xs text-slate-500">No changes to shapes, cracks, or geometry. Strictly pigment mapping.</p>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {preserveStructure 
+                ? "No changes to shapes, cracks, or geometry. Strictly pigment mapping." 
+                : "AI will attempt to repair cracks, fill chips, and smooth out damage."}
+            </p>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 };
 
 export default ModificationsCard;
