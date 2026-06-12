@@ -48,7 +48,8 @@ function App() {
     const formData = new FormData();
     formData.append("file", image);
     formData.append("target_material", targetMaterial); 
-    formData.append("custom_prompt", customPrompt); // <-- NEW: Sends text to FastAPI
+    formData.append("custom_prompt", customPrompt);
+    formData.append("preserve_structure", preserveStructure);
 
     try {
       const response = await fetch('https://mohsan-raza-harappan-backend.hf.space/api/restore-pigment', {
