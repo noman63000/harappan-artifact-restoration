@@ -11,7 +11,7 @@ function App() {
   // State Management
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [targetMaterial, setTargetMaterial] = useState('Terracotta Red');
+  const [targetMaterial, setTargetMaterial] = useState('Auto');
   const [customPrompt, setCustomPrompt] = useState(''); // <-- NEW: State for custom user text
   
   const [isProcessing, setIsProcessing] = useState(false);
