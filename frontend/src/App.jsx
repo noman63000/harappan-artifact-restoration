@@ -124,7 +124,9 @@ function App() {
               targetMaterial={targetMaterial} 
               setTargetMaterial={setTargetMaterial} 
               customPrompt={customPrompt}           
-              setCustomPrompt={setCustomPrompt}     
+              setCustomPrompt={setCustomPrompt}
+              preserveStructure={preserveStructure}
+              setPreserveStructure={setPreserveStructure}
             />
           </div>
 
